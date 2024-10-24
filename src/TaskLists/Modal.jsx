@@ -1,17 +1,20 @@
+/* eslint-disable react/prop-types */
 import { useContext, useState } from "react";
 import { TaskContext } from "../context/Context";
 
 export default function Modal({ onClose }) {
   const { addTask } = useContext(TaskContext);
+
+  const [taskName, setTaskName] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
   const [category, setCategory] = useState("todo");
-  const [task, setTask] = useState("");
 
   const handleSubmit = event => {
     event.preventDefault();
-    if (task) {
-      addTask(category, task);
-      onClose();
-    }
+    const newTask = { name: taskName, description, date };
+    addTask(category, newTask);
+    onClose();
   };
 
   return (
@@ -34,8 +37,8 @@ export default function Modal({ onClose }) {
                   type="text"
                   id="taskName"
                   name="taskName"
-                  value={task}
-                  onChange={e => setTask(e.target.value)}
+                  value={taskName}
+                  onChange={e => setTaskName(e.target.value)}
                   required
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
@@ -50,6 +53,8 @@ export default function Modal({ onClose }) {
                 <textarea
                   id="description"
                   name="description"
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
                   rows="3"
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                 ></textarea>
@@ -64,6 +69,8 @@ export default function Modal({ onClose }) {
                 <input
                   type="date"
                   id="dueDate"
+                  value={date}
+                  onChange={e => setDate(e.target.value)}
                   name="dueDate"
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                 />

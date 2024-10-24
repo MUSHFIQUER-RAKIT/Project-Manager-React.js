@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useContext } from "react";
 import { TodoDelete, TodoEdit, TodoSort } from "../Component/svg";
 import { TaskContext } from "../context/Context";
@@ -32,8 +31,8 @@ const getColor = category => {
   }
 };
 
-export default function TasksList({ tasks }) {
-  const { deleteTask, editTask } = useContext(TaskContext);
+export default function TasksList() {
+  const { tasks, deleteTask, editTask } = useContext(TaskContext);
 
   return (
     <div className="-mx-2 mb-6 flex flex-wrap">
@@ -45,7 +44,7 @@ export default function TasksList({ tasks }) {
                 {category.toUpperCase()} ({taskArray.length})
               </h3>
 
-              <button onClick={"ff"}>{TodoSort}</button>
+              <button>{TodoSort}</button>
             </div>
 
             {taskArray.length === 0 ? (
@@ -59,7 +58,7 @@ export default function TasksList({ tasks }) {
                         category
                       )}`}
                     >
-                      {task}
+                      {task.name}
                     </h4>
 
                     <div className="flex gap-2">
@@ -76,12 +75,10 @@ export default function TasksList({ tasks }) {
                     </div>
                   </div>
                   <p className="mb-2 text-sm text-zinc-200">
-                    Prepare proctor for client meeting
+                    {task.description}
                   </p>
 
-                  <p className="mt-6 text-xs text-zinc-400">
-                    February 20, 2024
-                  </p>
+                  <p className="mt-6 text-xs text-zinc-400">{task.date}</p>
                 </div>
               ))
             )}
