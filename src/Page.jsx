@@ -5,13 +5,15 @@ import SideBar from "./SideBar";
 import TaskBoard from "./TaskLists/TaskBoard";
 import { TaskContext } from "./context/Context";
 
-const TaskProvider = ({ children }) => {
-  const [tasks, setTasks] = useState({
-    todo: [],
-    onProgress: [],
-    done: [],
-    revise: [],
-  });
+const initialTasks = {
+  todo: [],
+  onProgress: [],
+  done: [],
+  revised: [],
+};
+
+export const TaskProvider = ({ children }) => {
+  const [tasks, setTasks] = useState(initialTasks);
 
   const addTask = (category, task) => {
     setTasks(prevTasks => ({

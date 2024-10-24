@@ -84,7 +84,7 @@ export default function Modal({ onClose }) {
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="todo">To-Do</option>
-                  <option value="inprogress">On Progress</option>
+                  <option value="onProgress">On Progress</option>
                   <option value="done">Done</option>
                   <option value="revised">Revised</option>
                 </select>
