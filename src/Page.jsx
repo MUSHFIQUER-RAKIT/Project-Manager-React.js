@@ -29,14 +29,15 @@ export const TaskProvider = ({ children }) => {
     }));
   };
 
-  const editTask = (category, index, updatedTask) => {
-    const updatedCategory = [...tasks[category]];
-    updatedCategory[index] = updatedTask;
-    setTasks(prevTasks => ({ ...prevTasks, [category]: updatedCategory }));
-  };
+  // const editTask = (category, index, updatedTask, event) => {
+  //   event.preventDefault();
+  //   const updatedCategory = [...tasks[category]];
+  //   updatedCategory[index] = updatedTask;
+  //   setTasks(prevTasks => ({ ...prevTasks, [category]: updatedCategory }));
+  // };
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, deleteTask, editTask }}>
+    <TaskContext.Provider value={{ tasks, addTask, deleteTask }}>
       {children}
     </TaskContext.Provider>
   );

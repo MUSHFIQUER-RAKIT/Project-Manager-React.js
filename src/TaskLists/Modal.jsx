@@ -2,19 +2,35 @@
 import { useContext, useState } from "react";
 import { TaskContext } from "../context/Context";
 
-export default function Modal({ onClose }) {
+export default function Modal({ onClose, taskToUpdate }) {
+  console.log(taskToUpdate);
   const { addTask } = useContext(TaskContext);
 
-  const [taskName, setTaskName] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
-  const [category, setCategory] = useState("todo");
+  const [taskDetails, setTaskDetails] = useState({
+    taskName: "",
+    description: "",
+    date: "",
+    category: "todo",
+  });
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setTaskDetails(prevDetails => ({
+      ...prevDetails,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = event => {
     event.preventDefault();
-    const newTask = { name: taskName, description, date };
-    addTask(category, newTask);
-    onClose();
+    const { taskName, description, date, category } = taskDetails;
+    if (taskName && description && date) {
+      const newTask = { name: taskName, description, date };
+      addTask(category, newTask);
+      onClose();
+    } else {
+      alert("Please fill in all fields");
+    }
   };
 
   return (
@@ -37,8 +53,8 @@ export default function Modal({ onClose }) {
                   type="text"
                   id="taskName"
                   name="taskName"
-                  value={taskName}
-                  onChange={e => setTaskName(e.target.value)}
+                  value={taskDetails.taskName}
+                  onChange={handleChange}
                   required
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
@@ -53,8 +69,8 @@ export default function Modal({ onClose }) {
                 <textarea
                   id="description"
                   name="description"
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
+                  value={taskDetails.description}
+                  onChange={handleChange}
                   rows="3"
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                 ></textarea>
@@ -69,9 +85,9 @@ export default function Modal({ onClose }) {
                 <input
                   type="date"
                   id="dueDate"
-                  value={date}
-                  onChange={e => setDate(e.target.value)}
-                  name="dueDate"
+                  value={taskDetails.date}
+                  onChange={handleChange}
+                  name="date"
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
@@ -86,8 +102,8 @@ export default function Modal({ onClose }) {
                 <select
                   id="category"
                   name="category"
-                  value={category}
-                  onChange={e => setCategory(e.target.value)}
+                  value={taskDetails.category}
+                  onChange={handleChange}
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="todo">To-Do</option>

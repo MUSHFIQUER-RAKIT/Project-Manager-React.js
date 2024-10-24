@@ -31,7 +31,7 @@ const getColor = category => {
   }
 };
 
-export default function TasksList() {
+export default function TasksList({ onEdit }) {
   const { tasks, deleteTask, editTask } = useContext(TaskContext);
 
   return (
@@ -65,11 +65,7 @@ export default function TasksList() {
                       <button onClick={() => deleteTask(category, index)}>
                         {TodoDelete}
                       </button>
-                      <button
-                        onClick={() =>
-                          editTask(category, index, prompt("Edit Task:", task))
-                        }
-                      >
+                      <button onClick={() => onEdit(event, task)}>
                         {TodoEdit}
                       </button>
                     </div>
