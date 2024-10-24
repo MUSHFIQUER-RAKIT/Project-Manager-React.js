@@ -45,11 +45,11 @@ export default function TasksList({ tasks }) {
                 {category.toUpperCase()} ({taskArray.length})
               </h3>
 
-              {TodoSort}
+              <button onClick={"ff"}>{TodoSort}</button>
             </div>
 
             {taskArray.length === 0 ? (
-              <p>No Task Available....</p>
+              <p>Task List is empty!</p>
             ) : (
               taskArray.map((task, index) => (
                 <div key={index} className="mb-4 rounded-lg bg-gray-800 p-4">
