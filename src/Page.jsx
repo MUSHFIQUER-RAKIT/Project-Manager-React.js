@@ -1,5 +1,5 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
-
 import Header from "./Header";
 import SideBar from "./SideBar";
 import TaskBoard from "./TaskLists/TaskBoard";
@@ -14,12 +14,30 @@ const initialTasks = {
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState(initialTasks);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [taskToUpdate, setTaskToUpdate] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const addTask = (category, task) => {
-    setTasks(prevTasks => ({
-      ...prevTasks,
-      [category]: [...prevTasks[category], task],
-    }));
+  const openModal = () => setModalOpen(true);
+  function closeModal() {
+    setModalOpen(false);
+    setTaskToUpdate(null);
+  }
+
+  const addTask = (category, taskDetails, newTask, isAdd) => {
+    if (isAdd) {
+      setTasks(prevTasks => ({
+        ...prevTasks,
+        [category]: [...prevTasks[category], newTask],
+      }));
+    } else {
+      setTasks(prevTasks => ({
+        ...prevTasks,
+        [category]: prevTasks[category].map(task =>
+          task.id === newTask.id ? newTask : task
+        ),
+      }));
+    }
   };
 
   const deleteTask = (category, index) => {
@@ -29,15 +47,39 @@ export const TaskProvider = ({ children }) => {
     }));
   };
 
-  // const editTask = (category, index, updatedTask, event) => {
+  function handleEditTask(event, task) {
+    event.preventDefault();
+    setTaskToUpdate(task);
+    setModalOpen(true);
+  }
+
+  // const handleEditTasks = (category, index, updatedTask, event) => {
   //   event.preventDefault();
   //   const updatedCategory = [...tasks[category]];
   //   updatedCategory[index] = updatedTask;
-  //   setTasks(prevTasks => ({ ...prevTasks, [category]: updatedCategory }));
+  //   setTaskToUpdate(prevTasks => ({
+  //     ...prevTasks,
+  //     [category]: updatedCategory,
+  //   }));
+  //   setModalOpen(true);
   // };
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, deleteTask }}>
+    <TaskContext.Provider
+      value={{
+        tasks,
+        addTask,
+        deleteTask,
+        isModalOpen,
+        setModalOpen,
+        openModal,
+        closeModal,
+        searchTerm,
+        setSearchTerm,
+        taskToUpdate,
+        handleEditTask,
+      }}
+    >
       {children}
     </TaskContext.Provider>
   );

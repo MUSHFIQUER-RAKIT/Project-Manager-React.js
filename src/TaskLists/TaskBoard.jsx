@@ -1,23 +1,12 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { TaskContext } from "../context/Context";
 import Modal from "./Modal";
 import TaskAction from "./TaskAction";
 import TasksList from "./TasksList";
 
 export default function TaskBoard() {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const { tasks } = useContext(TaskContext);
-
-  const [taskToUpdate, setTaskToUpdate] = useState(null);
-
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
-
-  function handleEditTask(event, task) {
-    event.preventDefault();
-    setTaskToUpdate(task);
-    setModalOpen(true);
-  }
+  const { tasks, isModalOpen, openModal, closeModal, taskToUpdate } =
+    useContext(TaskContext);
 
   return (
     <>
@@ -27,7 +16,7 @@ export default function TaskBoard() {
         )}
 
         <TaskAction onAdd={openModal} />
-        <TasksList tasks={tasks} onEdit={handleEditTask} />
+        <TasksList tasks={tasks} />
       </div>
     </>
   );

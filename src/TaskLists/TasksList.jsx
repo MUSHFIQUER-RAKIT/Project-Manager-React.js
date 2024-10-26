@@ -31,8 +31,9 @@ const getColor = category => {
   }
 };
 
-export default function TasksList({ onEdit }) {
-  const { tasks, deleteTask, editTask } = useContext(TaskContext);
+export default function TasksList() {
+  const { tasks, deleteTask, handleEditTask, searchTerm } =
+    useContext(TaskContext);
 
   return (
     <div className="-mx-2 mb-6 flex flex-wrap">
@@ -50,33 +51,41 @@ export default function TasksList({ onEdit }) {
             {taskArray.length === 0 ? (
               <p>Task List is empty!</p>
             ) : (
-              taskArray.map((task, index) => (
-                <div key={index} className="mb-4 rounded-lg bg-gray-800 p-4">
-                  <div className="flex justify-between">
-                    <h4
-                      className={`mb-2 flex-1 font-semibold ${getColor(
-                        category
-                      )}`}
-                    >
-                      {task.name}
-                    </h4>
+              taskArray
+                .filter(task => {
+                  return searchTerm.toLowerCase() === ""
+                    ? task
+                    : task.name
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase());
+                })
+                .map((task, index) => (
+                  <div key={index} className="mb-4 rounded-lg bg-gray-800 p-4">
+                    <div className="flex justify-between">
+                      <h4
+                        className={`mb-2 flex-1 font-semibold ${getColor(
+                          category
+                        )}`}
+                      >
+                        {task.name}
+                      </h4>
 
-                    <div className="flex gap-2">
-                      <button onClick={() => deleteTask(category, index)}>
-                        {TodoDelete}
-                      </button>
-                      <button onClick={() => onEdit(event, task)}>
-                        {TodoEdit}
-                      </button>
+                      <div className="flex gap-2">
+                        <button onClick={() => deleteTask(category, index)}>
+                          {TodoDelete}
+                        </button>
+                        <button onClick={() => handleEditTask(event, task)}>
+                          {TodoEdit}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <p className="mb-2 text-sm text-zinc-200">
-                    {task.description}
-                  </p>
+                    <p className="mb-2 text-sm text-zinc-200">
+                      {task.description}
+                    </p>
 
-                  <p className="mt-6 text-xs text-zinc-400">{task.date}</p>
-                </div>
-              ))
+                    <p className="mt-6 text-xs text-zinc-400">{task.date}</p>
+                  </div>
+                ))
             )}
           </div>
         </div>

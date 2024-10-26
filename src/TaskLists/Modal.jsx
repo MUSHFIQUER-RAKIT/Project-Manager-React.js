@@ -3,15 +3,18 @@ import { useContext, useState } from "react";
 import { TaskContext } from "../context/Context";
 
 export default function Modal({ onClose, taskToUpdate }) {
-  console.log(taskToUpdate);
   const { addTask } = useContext(TaskContext);
+  const [category, setCategory] = useState("todo");
+  const [isAdd, setIsAdd] = useState(Object.is(taskToUpdate, null));
 
-  const [taskDetails, setTaskDetails] = useState({
-    taskName: "",
-    description: "",
-    date: "",
-    category: "todo",
-  });
+  const [taskDetails, setTaskDetails] = useState(
+    taskToUpdate || {
+      id: crypto.randomUUID(),
+      name: "",
+      description: "",
+      date: "",
+    }
+  );
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -23,10 +26,11 @@ export default function Modal({ onClose, taskToUpdate }) {
 
   const handleSubmit = event => {
     event.preventDefault();
-    const { taskName, description, date, category } = taskDetails;
-    if (taskName && description && date) {
-      const newTask = { name: taskName, description, date };
-      addTask(category, newTask);
+    const { id, name, description, date } = taskDetails;
+
+    if ((id, name && description && date)) {
+      const newTask = { id, name, description, date };
+      addTask(category, taskDetails, newTask, isAdd);
       onClose();
     } else {
       alert("Please fill in all fields");
@@ -39,21 +43,21 @@ export default function Modal({ onClose, taskToUpdate }) {
         <div className="w-full max-w-md rounded-lg bg-gray-800 shadow-xl">
           <div className="p-6">
             <h2 className="mb-6 text-2xl font-bold text-green-400">
-              Create Task
+              {isAdd ? "Create Task" : "Edit Task"}
             </h2>
             <form>
               <div className="mb-4">
                 <label
-                  htmlFor="taskName"
+                  htmlFor="name"
                   className="mb-1 block text-sm font-medium text-gray-300"
                 >
                   Task Name
                 </label>
                 <input
                   type="text"
-                  id="taskName"
-                  name="taskName"
-                  value={taskDetails.taskName}
+                  id="name"
+                  name="name"
+                  value={taskDetails.name}
                   onChange={handleChange}
                   required
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -102,8 +106,8 @@ export default function Modal({ onClose, taskToUpdate }) {
                 <select
                   id="category"
                   name="category"
-                  value={taskDetails.category}
-                  onChange={handleChange}
+                  value={category}
+                  onChange={e => setCategory(e.target.value)}
                   className="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-white shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="todo">To-Do</option>
@@ -122,11 +126,11 @@ export default function Modal({ onClose, taskToUpdate }) {
                   Cancel
                 </button>
                 <button
-                  onClick={() => handleSubmit(event)}
+                  onClick={handleSubmit}
                   type="submit"
                   className="rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
-                  Create Task
+                  {isAdd ? "Create Task" : "Edit Task"}
                 </button>
               </div>
             </form>
