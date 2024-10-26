@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { TodoDelete, TodoEdit, TodoSort } from "../Component/svg";
 import { TaskContext } from "../context/Context";
 
-const getCategory = category => {
+const getCategory = (category) => {
   switch (category.toLowerCase()) {
     case "todo":
       return "bg-indigo-600";
@@ -16,7 +16,8 @@ const getCategory = category => {
       return "bg-red-700 text-gray-800 border-gray-300";
   }
 };
-const getColor = category => {
+
+const getColor = (category) => {
   switch (category.toLowerCase()) {
     case "todo":
       return "text-indigo-500";
@@ -32,20 +33,18 @@ const getColor = category => {
 };
 
 export default function TasksList() {
-  const { tasks, deleteTask, handleEditTask, searchTerm } =
-    useContext(TaskContext);
-
+  const { tasks, deleteTask, handleEditTask, searchTerm } = useContext(TaskContext);
   const [sortOrder, setSortOrder] = useState({
     todo: "asc",
     onProgress: "asc",
     done: "asc",
-    revised: "asc",
+    revised: "asc"
   });
 
-  const toggleSortOrder = category => {
-    setSortOrder(prevSortOrder => ({
+  const toggleSortOrder = (category) => {
+    setSortOrder((prevSortOrder) => ({
       ...prevSortOrder,
-      [category]: prevSortOrder[category] === "asc" ? "desc" : "asc",
+      [category]: prevSortOrder[category] === "asc" ? "desc" : "asc"
     }));
   };
 
@@ -53,14 +52,14 @@ export default function TasksList() {
     <div className="-mx-2 mb-6 flex flex-wrap">
       {Object.entries(tasks).map(([category, taskArray]) => (
         <div key={category} className="mb-4 w-full px-2 sm:w-1/2 md:w-1/4">
-          <div className={`rounded-lg ${getCategory(category)}  p-4`}>
+          <div className={rounded-lg ${getCategory(category)}  p-4}>
             <div className="mb-2 flex items-center justify-between">
               <h3 className="text-lg font-semibold">
                 {category.toUpperCase()} ({taskArray.length})
               </h3>
 
               <button onClick={() => toggleSortOrder(category)}>
-                {TodoSort}
+                {TodoSort} {/* Sort icon */}
               </button>
             </div>
 
@@ -68,26 +67,22 @@ export default function TasksList() {
               <p>Task List is empty!</p>
             ) : (
               taskArray
-                .filter(task =>
+                .filter((task) =>
                   searchTerm
                     ? task.name.toLowerCase().includes(searchTerm.toLowerCase())
                     : true
                 )
                 .sort((a, b) => {
                   if (sortOrder[category] === "asc") {
-                    return a.name.localeCompare(b.name);
+                    return a.name.localeCompare(b.name); // Ascending sort
                   } else {
-                    return b.name.localeCompare(a.name);
+                    return b.name.localeCompare(a.name); // Descending sort
                   }
                 })
                 .map((task, index) => (
                   <div key={index} className="mb-4 rounded-lg bg-gray-800 p-4">
                     <div className="flex justify-between">
-                      <h4
-                        className={`mb-2 flex-1 font-semibold ${getColor(
-                          category
-                        )}`}
-                      >
+                      <h4 className={mb-2 flex-1 font-semibold ${getColor(category)}}>
                         {task.name}
                       </h4>
 
@@ -100,10 +95,7 @@ export default function TasksList() {
                         </button>
                       </div>
                     </div>
-                    <p className="mb-2 text-sm text-zinc-200">
-                      {task.description}
-                    </p>
-
+                    <p className="mb-2 text-sm text-zinc-200">{task.description}</p>
                     <p className="mt-6 text-xs text-zinc-400">{task.date}</p>
                   </div>
                 ))
