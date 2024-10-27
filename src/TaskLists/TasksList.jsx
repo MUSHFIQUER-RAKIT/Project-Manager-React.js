@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { TodoDelete, TodoEdit, TodoSort } from "../Component/svg";
 import { TaskContext } from "../context/Context";
-
 const getCategory = category => {
   switch (category.toLowerCase()) {
     case "todo":
@@ -36,81 +35,87 @@ export default function TasksList() {
     useContext(TaskContext);
 
   const [sortOrder, setSortOrder] = useState({
-    todo: "asc",
-    onProgress: "asc",
-    done: "asc",
-    revised: "asc",
+    todo: true,
+    onProgress: true,
+    done: true,
+    revised: true,
   });
 
   const toggleSortOrder = category => {
-    setSortOrder(prevSortOrder => ({
-      ...prevSortOrder,
-      [category]: prevSortOrder[category] === "asc" ? "desc" : "asc",
+    setSortOrder(prevOrder => ({
+      ...prevOrder,
+      [category]: !prevOrder[category],
     }));
   };
 
   return (
     <div className="-mx-2 mb-6 flex flex-wrap">
-      {Object.entries(tasks).map(([category, taskArray]) => (
-        <div key={category} className="mb-4 w-full px-2 sm:w-1/2 md:w-1/4">
-          <div className={`rounded-lg ${getCategory(category)}  p-4`}>
-            <div className="mb-2 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">
-                {category.toUpperCase()} ({taskArray.length})
-              </h3>
+      {Object.entries(tasks).map(([category, taskArray]) => {
+        const filteredTasks = taskArray.filter(task =>
+          searchTerm
+            ? task.name.toLowerCase().includes(searchTerm.toLowerCase())
+            : true
+        );
 
-              <button onClick={() => toggleSortOrder(category)}>
-                {TodoSort}
-              </button>
-            </div>
+        return (
+          <div key={category} className="mb-4 w-full px-2 sm:w-1/2 md:w-1/4">
+            <div className={`rounded-lg ${getCategory(category)}  p-4`}>
+              <div className="mb-2 flex items-center justify-between">
+                <h3 className="text-lg font-semibold">
+                  {category.toUpperCase()} ({filteredTasks.length})
+                </h3>
 
-            {taskArray.length === 0 ? (
-              <p>Task List is empty!</p>
-            ) : (
-              taskArray
-                .filter(task =>
-                  searchTerm
-                    ? task.name.toLowerCase().includes(searchTerm.toLowerCase())
-                    : true
-                )
-                .sort((a, b) => {
-                  if (sortOrder[category] === "asc") {
-                    return a.name.localeCompare(b.name);
-                  } else {
-                    return b.name.localeCompare(a.name);
-                  }
-                })
-                .map((task, index) => (
-                  <div key={index} className="mb-4 rounded-lg bg-gray-800 p-4">
-                    <div className="flex justify-between">
-                      <h4
-                        className={`mb-2 flex-1 font-semibold ${getColor(
-                          category
-                        )}`}
-                      >
-                        {task.name}
-                      </h4>
+                <button onClick={() => toggleSortOrder(category)}>
+                  {TodoSort}
+                </button>
+              </div>
 
-                      <div className="flex gap-2">
-                        <button onClick={() => deleteTask(category, index)}>
-                          {TodoDelete}
-                        </button>
-                        <button onClick={() => handleEditTask(event, task)}>
-                          {TodoEdit}
-                        </button>
+              {filteredTasks.length === 0 ? (
+                <p>{searchTerm ? "Task Not Found!" : "Task List is empty!"}</p>
+              ) : (
+                (sortOrder[category] ? taskArray : [...taskArray].reverse())
+                  .filter(task => {
+                    return searchTerm === ""
+                      ? task
+                      : task.name
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase());
+                  })
+                  .map((task, index) => (
+                    <div
+                      key={index}
+                      className="mb-4 rounded-lg bg-gray-800 p-4"
+                    >
+                      <div className="flex justify-between">
+                        <h4
+                          className={`mb-2 flex-1 font-semibold ${getColor(
+                            category
+                          )}`}
+                        >
+                          {task.name}
+                        </h4>
+
+                        <div className="flex gap-2">
+                          <button onClick={() => deleteTask(category, index)}>
+                            {TodoDelete}
+                          </button>
+                          <button onClick={() => handleEditTask(event, task)}>
+                            {TodoEdit}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <p className="mb-2 text-sm text-zinc-200">
-                      {task.description}
-                    </p>
+                      <p className="mb-2 text-sm text-zinc-200">
+                        {task.description}
+                      </p>
 
-                    <p className="mt-6 text-xs text-zinc-400">{task.date}</p>
-                  </div>
-                ))
-            )}
+                      <p className="mt-6 text-xs text-zinc-400">{task.date}</p>
+                    </div>
+                  ))
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

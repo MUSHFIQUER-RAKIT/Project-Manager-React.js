@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
+import { toast } from "react-toastify";
 import Header from "./Header";
 import SideBar from "./SideBar";
 import TaskBoard from "./TaskLists/TaskBoard";
@@ -41,10 +42,15 @@ export const TaskProvider = ({ children }) => {
   };
 
   const deleteTask = (category, index) => {
-    setTasks(prevTasks => ({
-      ...prevTasks,
-      [category]: prevTasks[category].filter((_, i) => i !== index),
-    }));
+    if (confirm("Are You Sure ?\nYou want To Delete?") === true) {
+      setTasks(prevTasks => ({
+        ...prevTasks,
+        [category]: prevTasks[category].filter((_, i) => i !== index),
+      }));
+      toast.success("Task Successfully Deleted");
+    } else {
+      toast.warning("Task Not Deleted");
+    }
   };
 
   function handleEditTask(event, task) {

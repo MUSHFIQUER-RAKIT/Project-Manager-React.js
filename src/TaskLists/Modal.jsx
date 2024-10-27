@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState } from "react";
+import { toast } from "react-toastify";
 import { TaskContext } from "../context/Context";
 
 export default function Modal({ onClose, taskToUpdate }) {
@@ -32,8 +33,10 @@ export default function Modal({ onClose, taskToUpdate }) {
       const newTask = { id, name, description, date };
       addTask(category, taskDetails, newTask, isAdd);
       onClose();
+
+      // toast.success(`${name} Added Successfully on The List`);
     } else {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
     }
   };
 
