@@ -31,7 +31,7 @@ const getColor = category => {
 };
 
 export default function TasksList() {
-  const { tasks, deleteTask, handleEditTask, searchTerm } =
+  const { state, deleteTask, handleEditTask, searchTerm } =
     useContext(TaskContext);
 
   const [sortOrder, setSortOrder] = useState({
@@ -50,7 +50,7 @@ export default function TasksList() {
 
   return (
     <div className="-mx-2 mb-6 flex flex-wrap">
-      {Object.entries(tasks).map(([category, taskArray]) => {
+      {Object.entries(state.tasks).map(([category, taskArray]) => {
         const filteredTasks = taskArray.filter(task =>
           searchTerm
             ? task.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -73,7 +73,7 @@ export default function TasksList() {
               {filteredTasks.length === 0 ? (
                 <p>{searchTerm ? "Task Not Found!" : "Task List is empty!"}</p>
               ) : (
-                (sortOrder[category] ? taskArray : [...taskArray].reverse())
+                (sortOrder[category] ? [...taskArray].reverse() : taskArray)
                   .filter(task => {
                     return searchTerm === ""
                       ? task
@@ -96,10 +96,14 @@ export default function TasksList() {
                         </h4>
 
                         <div className="flex gap-2">
-                          <button onClick={() => deleteTask(category, index)}>
+                          <button onClick={() => deleteTask(category, task)}>
                             {TodoDelete}
                           </button>
-                          <button onClick={() => handleEditTask(event, task)}>
+                          <button
+                            onClick={() =>
+                              handleEditTask(event, category, task)
+                            }
+                          >
                             {TodoEdit}
                           </button>
                         </div>

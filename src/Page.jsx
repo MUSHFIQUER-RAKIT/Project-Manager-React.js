@@ -1,23 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import { toast } from "react-toastify";
+import { TaskContext } from "./context/Context";
 import Header from "./Header";
+import { initialState, taskReducer } from "./Reducers/TaskReducer";
 import SideBar from "./SideBar";
 import TaskBoard from "./TaskLists/TaskBoard";
-import { TaskContext } from "./context/Context";
-
-const initialTasks = {
-  todo: [],
-  onProgress: [],
-  done: [],
-  revised: [],
-};
 
 export const TaskProvider = ({ children }) => {
-  const [tasks, setTasks] = useState(initialTasks);
   const [isModalOpen, setModalOpen] = useState(false);
   const [taskToUpdate, setTaskToUpdate] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [state, dispatch] = useReducer(taskReducer, initialState);
 
   const openModal = () => setModalOpen(true);
   function closeModal() {
@@ -25,55 +19,41 @@ export const TaskProvider = ({ children }) => {
     setTaskToUpdate(null);
   }
 
-  const addTask = (category, taskDetails, newTask, isAdd) => {
+  const addTask = (category, taskDetails, isAdd) => {
     if (isAdd) {
-      setTasks(prevTasks => ({
-        ...prevTasks,
-        [category]: [...prevTasks[category], newTask],
-      }));
+      dispatch({
+        type: "ADD_TASK",
+        payload: { category, task: taskDetails },
+      });
     } else {
-      setTasks(prevTasks => ({
-        ...prevTasks,
-        [category]: prevTasks[category].map(task =>
-          task.id === newTask.id ? newTask : task
-        ),
-      }));
+      dispatch({
+        type: "EDIT_TASK",
+        payload: { category, task: taskDetails },
+      });
     }
   };
 
-  const deleteTask = (category, index) => {
-    if (confirm("Are You Sure ?\nYou want To Delete?") === true) {
-      setTasks(prevTasks => ({
-        ...prevTasks,
-        [category]: prevTasks[category].filter((_, i) => i !== index),
-      }));
-      toast.success("Task Successfully Deleted");
-    } else {
-      toast.warning("Task Not Deleted");
-    }
-  };
-
-  function handleEditTask(event, task) {
+  function handleEditTask(event, category, task) {
     event.preventDefault();
     setTaskToUpdate(task);
     setModalOpen(true);
   }
 
-  // const handleEditTasks = (category, index, updatedTask, event) => {
-  //   event.preventDefault();
-  //   const updatedCategory = [...tasks[category]];
-  //   updatedCategory[index] = updatedTask;
-  //   setTaskToUpdate(prevTasks => ({
-  //     ...prevTasks,
-  //     [category]: updatedCategory,
-  //   }));
-  //   setModalOpen(true);
-  // };
-
+  const deleteTask = (category, task) => {
+    if (confirm("Are You Sure ?\nYou want To Delete?") === true) {
+      dispatch({
+        type: "REMOVE_TASK",
+        payload: { category, task },
+      });
+      toast.success("Task Successfully Deleted");
+    } else {
+      toast.warning("Task Not Deleted");
+    }
+  };
   return (
     <TaskContext.Provider
       value={{
-        tasks,
+        state,
         addTask,
         deleteTask,
         isModalOpen,

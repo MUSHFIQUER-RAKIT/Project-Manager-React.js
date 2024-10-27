@@ -5,18 +5,15 @@ import TaskAction from "./TaskAction";
 import TasksList from "./TasksList";
 
 export default function TaskBoard() {
-  const { tasks, isModalOpen, openModal, closeModal, taskToUpdate } =
-    useContext(TaskContext);
+  const { isModalOpen } = useContext(TaskContext);
 
   return (
     <>
       <div className="mx-auto max-w-7xl p-6 ">
-        {isModalOpen && (
-          <Modal onClose={closeModal} taskToUpdate={taskToUpdate} />
-        )}
+        {isModalOpen && <Modal />}
 
-        <TaskAction onAdd={openModal} />
-        <TasksList tasks={tasks} />
+        <TaskAction />
+        <TasksList />
       </div>
     </>
   );

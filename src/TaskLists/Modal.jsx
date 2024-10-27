@@ -1,10 +1,9 @@
-/* eslint-disable react/prop-types */
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { TaskContext } from "../context/Context";
 
-export default function Modal({ onClose, taskToUpdate }) {
-  const { addTask } = useContext(TaskContext);
+export default function Modal() {
+  const { addTask, closeModal, taskToUpdate } = useContext(TaskContext);
   const [category, setCategory] = useState("todo");
   const [isAdd, setIsAdd] = useState(Object.is(taskToUpdate, null));
 
@@ -32,7 +31,7 @@ export default function Modal({ onClose, taskToUpdate }) {
     if ((id, name && description && date)) {
       const newTask = { id, name, description, date };
       addTask(category, taskDetails, newTask, isAdd);
-      onClose();
+      closeModal();
 
       // toast.success(`${name} Added Successfully on The List`);
     } else {
@@ -122,7 +121,7 @@ export default function Modal({ onClose, taskToUpdate }) {
 
               <div className="flex justify-end space-x-3">
                 <button
-                  onClick={onClose}
+                  onClick={closeModal}
                   type="button"
                   className="rounded-md border border-gray-600 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
