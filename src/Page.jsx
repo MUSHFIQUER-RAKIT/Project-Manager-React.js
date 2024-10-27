@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useReducer, useState } from "react";
 import { toast } from "react-toastify";
 import { TaskContext } from "./context/Context";
@@ -7,7 +6,7 @@ import { initialState, taskReducer } from "./Reducers/TaskReducer";
 import SideBar from "./SideBar";
 import TaskBoard from "./TaskLists/TaskBoard";
 
-export const TaskProvider = ({ children }) => {
+export default function Page() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [taskToUpdate, setTaskToUpdate] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,17 +22,23 @@ export const TaskProvider = ({ children }) => {
     if (isAdd) {
       dispatch({
         type: "ADD_TASK",
-        payload: { category, task: taskDetails },
+        payload: { category, taskDetails },
       });
+      toast.success(
+        `${
+          taskDetails.name
+        } Added Successfully on the\n${category.toUpperCase()} List`
+      );
     } else {
       dispatch({
         type: "EDIT_TASK",
-        payload: { category, task: taskDetails },
+        payload: { category, taskDetails },
       });
+      toast.success("Task Updated Successfully");
     }
   };
 
-  function handleEditTask(event, category, task) {
+  function handleEditTask(event, task) {
     event.preventDefault();
     setTaskToUpdate(task);
     setModalOpen(true);
@@ -66,14 +71,6 @@ export const TaskProvider = ({ children }) => {
         handleEditTask,
       }}
     >
-      {children}
-    </TaskContext.Provider>
-  );
-};
-
-export default function Page() {
-  return (
-    <TaskProvider>
       <div className="bg-gray-900 text-white">
         <div className="flex h-screen relative">
           <SideBar />
@@ -83,6 +80,6 @@ export default function Page() {
           </main>
         </div>
       </div>
-    </TaskProvider>
+    </TaskContext.Provider>
   );
 }

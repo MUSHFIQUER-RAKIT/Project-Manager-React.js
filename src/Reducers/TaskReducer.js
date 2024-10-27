@@ -16,7 +16,7 @@ export const taskReducer = (state, action) => {
           ...state.tasks,
           [action.payload.category]: [
             ...state.tasks[action.payload.category],
-            action.payload.task,
+            action.payload.taskDetails,
           ],
         },
       };
@@ -28,7 +28,9 @@ export const taskReducer = (state, action) => {
           ...state.tasks,
           [action.payload.category]: state.tasks[action.payload.category].map(
             task =>
-              task.id === action.payload.task.id ? action.payload.task : task
+              task.id === action.payload.taskDetails.id
+                ? action.payload.taskDetails
+                : task
           ),
         },
       };

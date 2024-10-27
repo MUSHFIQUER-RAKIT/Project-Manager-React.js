@@ -29,11 +29,8 @@ export default function Modal() {
     const { id, name, description, date } = taskDetails;
 
     if ((id, name && description && date)) {
-      const newTask = { id, name, description, date };
-      addTask(category, taskDetails, newTask, isAdd);
+      addTask(category, taskDetails, isAdd);
       closeModal();
-
-      // toast.success(`${name} Added Successfully on The List`);
     } else {
       toast.error("Please fill in all fields");
     }
@@ -128,7 +125,7 @@ export default function Modal() {
                   Cancel
                 </button>
                 <button
-                  onClick={handleSubmit}
+                  onClick={() => handleSubmit(event)}
                   type="submit"
                   className="rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 >

@@ -50,8 +50,8 @@ export default function TasksList() {
 
   return (
     <div className="-mx-2 mb-6 flex flex-wrap">
-      {Object.entries(state.tasks).map(([category, taskArray]) => {
-        const filteredTasks = taskArray.filter(task =>
+      {Object.entries(state.tasks).map(([category, tasks]) => {
+        const filteredTasks = tasks.filter(task =>
           searchTerm
             ? task.name.toLowerCase().includes(searchTerm.toLowerCase())
             : true
@@ -73,7 +73,7 @@ export default function TasksList() {
               {filteredTasks.length === 0 ? (
                 <p>{searchTerm ? "Task Not Found!" : "Task List is empty!"}</p>
               ) : (
-                (sortOrder[category] ? [...taskArray].reverse() : taskArray)
+                (sortOrder[category] ? [...tasks].reverse() : tasks)
                   .filter(task => {
                     return searchTerm === ""
                       ? task
@@ -99,11 +99,7 @@ export default function TasksList() {
                           <button onClick={() => deleteTask(category, task)}>
                             {TodoDelete}
                           </button>
-                          <button
-                            onClick={() =>
-                              handleEditTask(event, category, task)
-                            }
-                          >
+                          <button onClick={() => handleEditTask(event, task)}>
                             {TodoEdit}
                           </button>
                         </div>
